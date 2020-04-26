@@ -1,0 +1,12 @@
+{% if messages %}
+        {% for k in messages %}
+            <p style=" color: red">
+                {% if 'email' in k %}
+                <p style="color:blue">{{k}}</p>
+                {% else %}
+                <p style="color:green">{{k}}</p>
+                {% endif %}
+
+            </p> 
+        {% endfor %}
+    {% endif %}

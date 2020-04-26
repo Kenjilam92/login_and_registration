@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            font-family: "Comic Sans MS", cursive, sans-serif ;
+        }
+        body{
+            padding: 20px;
+        }
+        #logout{
+            text-align: right;
+            margin: -30px 0 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Success! Welcome,{{request.session.user.f_name}} {{request.session.user.l_name}}!</h1>
+    <p id="logout"><a href="/log_out">Log Out</a></p>
+    <p>Successfully registered (or logged in)!</p>
+</body>
+</html>
