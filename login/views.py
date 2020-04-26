@@ -33,9 +33,11 @@ def register(request):
         d=request.POST['pw']
         hashed_pw= bcrypt.hashpw(d.encode(),bcrypt.gensalt()).decode()
         User.objects.create(f_name=a,l_name=b,email=c,pw=hashed_pw)
+        new_user=User.objects.get(email=c)
         request.session['user']={
             'f_name': a,
-            'l_name': b
+            'l_name': b,
+            'id': new_user.id,
         }
         print('*'*100)
         return redirect('/success')
@@ -59,9 +61,10 @@ def login(request):
         selected_user= User.objects.get(email=a)
         request.session['user']={
             'f_name': selected_user.f_name,
-            'l_name': selected_user.l_name
+            'l_name': selected_user.l_name,
+            'id': selected_user.id,
             }
-        return redirect('/success')
+        return redirect('/wall')
 
 def success(request):
     print('*'*100)

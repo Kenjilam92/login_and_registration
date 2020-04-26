@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wall</title>
+</head>
+<style>
+    *{
+    padding: 0;
+    margin: 0;
+    font-family: "Comic Sans MS", cursive, sans-serif ;
+    }
+    .header{
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border: black solid 2px;
+        padding: 5px 20px 5px 20px;
+        background-color:navy;
+        color: oldlace;
+    }
+    .header a{
+        color: oldlace;
+    }
+    .post{
+        display: flex;
+        flex-direction: column;
+        margin: 20px;
+    }
+    .post button{
+        box-shadow: gray 5px 5px;
+        align-self: flex-end;
+        width: fit-content;
+        padding: 3px 5px 3px 5px ;
+        border-radius: 10px;
+        border: black solid 1px;
+    }
+    .post textarea{
+        padding: 10px;
+    }
+    .previous_post{
+        margin: 15px 20px 5px 60px;
+        padding: 5px;
+        border: navy solid 1px;
+    }
+    .comment{
+        margin-left: 30px;
+    }
+    .comment form{
+        display: flex;
+        flex-direction: column;
+    }
+    .comment form button{
+        width: fit-content;
+        padding: 3px 5px 3px 5px;
+        align-self: flex-end;
+    }
+    h3{
+        color: navy;
+    }
+    h4{
+        color: green;
+    }
+
+</style>
+<body>
+    <div class="header">
+        <h1>CodingDojo Wall</h1>
+        <p>Wellcome {{request.session.user.f_name}} | <a href="/log_out">Log off</a></p>
+    </div>
+    {% if request.session.user %}
+    <form action="/wall/post" class="post" method="post">
+        {% csrf_token %} 
+        <label for="post">Post a message</label>
+        <textarea name="post" id="newpost" cols="30" rows="10"
+            {% if messages %}{% for i in messages %}
+                    {% if 'post' == i.extra_tags %}placeholder="{{i}}"
+            {% endif %}{% endfor %}{% else %} 
+                placeholder="Write something"
+            {% endif %}></textarea>
+        <input type="hidden" name="user_id" value={{request.session.user.id}}>
+        <button type="submit">Post a message</button>
+    </form>
+    {% endif %}
+    {% for i in posts %}
+    <div class="previous_post">
+        <h3>{{i.author.f_name}} {{i.author.l_name}} - {{i.created_date}}</h3>
+        <p>{{i.post}}</p>
+        <b>Comments:</b>
+        <div class="comment">
+            {% if i.comments.all %}
+                {% for j in i.comments.all %}
+                <h4>{{j.author.f_name}} {{j.author.l_name}} - {{j.created_date}}</h4>
+                <p>{{j.comment}}</p>
+                {% endfor %}
+            {%else%}
+                <p>_No comment</p>
+            {% endif %}
+            {% if request.session.user %}
+            <form action="/wall/comment" method="post">
+                {% csrf_token %} 
+                <label for="comment">Post a comment</label>
+                <textarea name="comment" cols="30" rows="3"
+                {% if messages %}
+                    {% for k in messages %}
+                        {% if "comment" == k.extra_tags %}placeholder="{{k}}" {% endif %} 
+                    {% endfor %}
+                {% else %} placeholder="Leave a comment" {% endif %}
+                ></textarea>
+                <input type="hidden" name="user_id" value="{{request.session.user.id}}">
+                <input type="hidden" name="post_id" value={{i.id}}>
+                <button type="submit">Post a comment</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
+</body>
+</html>
